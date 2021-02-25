@@ -1,6 +1,10 @@
 const redux = require('redux')
+const reduxLogger = require('redux-logger')
+
 const createStore = redux.createStore
 const combineReducers = redux.combineReducers
+const applymiddleware = redux.applyMiddleware
+const logger = reduxLogger.createLogger()
 
 
 const BUY_CAKE = 'BUY_CAKE'
@@ -20,27 +24,7 @@ function buyIceCream() {
         type: BUY_ICECREAM
     }
 }
-// //This approach first - 1 reducer for multiple actions
-// //state of app is object
-// const initialState = {
-//     numOfCakes: 10,
-//     numOfIceCreams: 20
-// }
 
-// //reducer fun - require to make state transition based on action received by store
-// const reducer = (state = initialState, action) => {
-//     switch (action.type) {
-//         case BUY_CAKE: return {
-//             ...state,  //copy state object
-//             numOfCakes: state.numOfCakes - 1 // only changes property that need to be
-//         }
-//         case BUY_ICECREAM: return {
-//             ...state,  //copy state object
-//             numOfIceCreams: state.numOfIceCreams - 1 // only changes property that need to be
-//         }
-//         default: return state
-//     }
-// }
 const initialCakeState = {
     numOfCakes: 10
 }
@@ -76,13 +60,13 @@ const rootReducer =combineReducers({
 })
 
 //holds app state - createstore accepts reducer fun as parameter which contains app state 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer,applymiddleware(logger))
 
 //Store provides method getState() to get current state 
 console.log('Initial state', store.getState())
 
 //Allow app to subscribe to changes in state in store
-const unsubscribe = store.subscribe(() => console.log('updated state', store.getState()))
+const unsubscribe = store.subscribe(() =>{})
 
 //store provides dispatch method to update state
 store.dispatch(buyCake())
